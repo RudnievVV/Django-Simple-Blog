@@ -1,0 +1,17 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+{% for post in posts %}
+    <article class="media content-section">
+        <div class="media-body">
+            <div class="article-metadata">
+                <h4><p class="artice-username">{{ post.user_name }} | <small class="text-muted">{{ post.email }}</small></p></h4>
+                <small class="text-muted">{{ post.created_at|date:'F d, Y' }} at {{post.created_at|time:"h:i a"}}</small>
+            </div>
+            <h5><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h5>
+            <small class="text-muted">Comments: {{ post.comments.count }}</small>
+            <br>
+            <p class="article-content">{{ post.text }}</p>
+        </div>
+    </article>
+	{% endfor %}
+{% endblock content %}

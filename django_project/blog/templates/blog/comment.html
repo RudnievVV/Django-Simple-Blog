@@ -1,0 +1,14 @@
+<div class="comment">
+	<div>
+	    <p>{{ comment.user_name }} <small class="text-muted"> | {{ comment.email }} | {{comment.created_at|date:'F d, Y' }} at {{comment.created_at|time:"h:i a"}}</small></p>
+    </div>
+    <strong>{{ comment.title }}</strong>
+    <br>{{ comment.text }}
+    <br><a class="btn btn-outline-info" href="{% url 'comment-to-comment-create' pk=post.pk comm=comment.id comm_sub=comment.id %}">Reply</a>
+    {% if comment.children %}
+        <hr>
+        {% for comment in comment.children.all %}
+            {% include 'blog/comment.html' %}
+        {% endfor %}
+    {% endif %}
+</div>

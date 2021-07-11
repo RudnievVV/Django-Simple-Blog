@@ -1,0 +1,67 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+<article class="media content-section">
+    <div class="media-body">
+        <div class="article-metadata">
+            <h4><p class="artice-username">{{ post.user_name }} | <small class="text-muted">{{ post.email }}</small></p></h4>
+            <small class="text-muted">{{ post.created_at|date:'F d, Y' }} at {{post.created_at|time:"h:i a"}}</small>
+        </div>
+    <h5 class="article-title">{{ post.title }}</h5>
+    <p class="article-content">{{ post.text }}</p>
+  </div>
+</article>
+<hr>
+<p>
+<h3>Comments:</h3>
+{% if post.comments.count %}
+    <label for="comments">Sort By:</label>
+    <select id="comments-sorting" name="comments">
+        {% for key, value in sort_options.items %}
+            <option {% if value.selected %}selected{% endif %} value={{ key }}>{{ value.value }}</option>
+        {% endfor %}
+    </select>
+    <button id="sort-order-btn" class="sort-ordering" value="{{ sort_order.value }}">{{ sort_order.symbol|safe }}</button>
+{% endif %}
+{% if page_obj %}
+    <ul class="comment-list">
+        {% for comment in page_obj.object_list %}
+            {% if comment.related_to_comment_id == 0 %}
+                <li class="comment">
+                    {% include "blog/comment.html" %}
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    <br>
+    {% if page_obj.has_previous %}
+        <button class='btn btn-outline-info mb-4 btn-pagination' onclick="paginationBtn('1')">First</button>
+        <button class='btn btn-outline-info mb-4 btn-pagination' onclick="paginationBtn('{{ page_obj.previous_page_number }}')">Previous</button>
+    {% endif%}
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <button class='btn btn-info mb-4 btn-pagination' onclick="paginationBtn('{{ num }}')">{{ num }}</button>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <button class='btn btn-outline-info mb-4 btn-pagination' onclick="paginationBtn('{{ num }}')">{{ num }}</button>
+        {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+        <button class='btn btn-outline-info mb-4 btn-pagination' onclick="paginationBtn('{{ page_obj.next_page_number }}')">Next</button>
+        <button class='btn btn-outline-info mb-4 btn-pagination' onclick="paginationBtn('{{ page_obj.paginator.num_pages }}')">Last</button>
+    {% endif%}
+{% else %}
+    {% for comment in comments %}
+        <ul>
+            {% if comment.related_to_comment_id == 0 %}
+                <li class="comment">
+                    {% include "blog/comment.html" %}
+                </li>
+            {% endif %}
+        </ul>
+    {% empty %}
+        <p>No comments yet. Be the first!</p>
+    {% endfor %}
+{% endif %}
+{% if page_obj.paginator.num_pages == page_obj.number %}
+    <p><a class="btn btn-outline-info" href="{% url 'comment-create' pk=post.id%}">Add comment</a></p>
+{% endif %}
+{% endblock content %}
