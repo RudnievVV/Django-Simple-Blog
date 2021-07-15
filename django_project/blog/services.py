@@ -81,12 +81,12 @@ class PostClass():
             comments_sort_options[self.request.GET.get('sort_option')]['selected'] = True
 
             self.comments = post.comments.filter(related_to_comment_id=0).order_by(f"{self.default_sort_db}{self.request.GET.get('sort_option')}")
-            paginator = Paginator(self.comments, settings.DEFAULT_COMMENTS_PAGINATION)
         else:
             for key, value in sorting_symbols.items():
                 if value.get('default'):
                     self.comments = post.comments.filter(related_to_comment_id=0).order_by(f"{value.get('db_value')}created_at")
-            paginator = Paginator(self.comments, settings.DEFAULT_COMMENTS_PAGINATION)
+                    
+        paginator = Paginator(self.comments, settings.DEFAULT_COMMENTS_PAGINATION)
 
         page_number = self.request.GET.get('page')
         self.page_obj = paginator.get_page(page_number)

@@ -25,12 +25,13 @@ function buildUrlAndGo(paramName, value) {
 
 
 // Function for comments sort option dropdown change on post page
-document.getElementById("comments-sorting").onchange = function (choice) {
+const sortOptionBtn = document.getElementById("comments-sorting")
+sortOptionBtn.onchange = (choice) => {
     buildUrlAndGo('sort_option', choice.target.value)
 }
 
 
-// Fucntion for comments sort option button click on post page
+// Function for comments sort order button click on post page
 const sortOrderBtn = document.getElementById("sort-order-btn")
 sortOrderBtn.onclick = () => {
     buildUrlAndGo('sort_order', sortOrderBtn.value)
